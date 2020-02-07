@@ -12,12 +12,27 @@ namespace GhAutoUpdater.Configs
         /// <summary>
         /// デフォルトファイル名
         /// </summary>
-        private static readonly string FILE_DEFAULT_NAME = "CliboDone.config";
+        private static readonly string FILE_DEFAULT_NAME = "GhAutoUpdater.config";
 
         /// <summary>
         /// ファイルパス
         /// </summary>
         private string filePath;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ApplicationName { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ApplicationFilePath { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ApplicationVersionFilePath { get; set; }
 
         /// <summary>
         /// 
@@ -66,6 +81,18 @@ namespace GhAutoUpdater.Configs
             var rootNode = xmlDoc.DocumentElement;
 
             {
+                var node = rootNode.SelectSingleNode("applicationName") as XmlElement;
+                ApplicationName = node.InnerText;
+            }
+            {
+                var node = rootNode.SelectSingleNode("applicationFilePath") as XmlElement;
+                ApplicationFilePath = node.InnerText;
+            }
+            {
+                var node = rootNode.SelectSingleNode("applicationVersionFilePath") as XmlElement;
+                ApplicationVersionFilePath = node.InnerText;
+            }
+            {
                 var node = rootNode.SelectSingleNode("githubApiRootUrl") as XmlElement;
                 GithubApiRootUrl = node.InnerText;
             }
@@ -78,7 +105,7 @@ namespace GhAutoUpdater.Configs
                 ReleasesLatestOwner = node.InnerText;
             }
             {
-                var node = rootNode.SelectSingleNode("githubApiRootUrl/repo") as XmlElement;
+                var node = rootNode.SelectSingleNode("releasesLatest/repo") as XmlElement;
                 ReleasesLatestRepo = node.InnerText;
             }
         }

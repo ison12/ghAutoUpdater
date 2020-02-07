@@ -51,22 +51,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configs\AppConfig.cs" />
+    <Compile Include="Datas\VersionInfo.cs" />
     <Compile Include="Forms\FMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FProgress.Designer.cs">
+      <DependentUpon>FProgress.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppDownloader.cs" />
     <Compile Include="Services\AppInstaller.cs" />
+    <Compile Include="Services\AppVersionGetter.cs" />
     <Compile Include="Services\AppVersionChecker.cs" />
     <Compile Include="Services\GitHubReleasesLatest.cs" />
     <Compile Include="Services\WebRequest.cs" />
     <Compile Include="Utils\FileUtil.cs" />
     <EmbeddedResource Include="Forms\FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FProgress.resx">
+      <DependentUpon>FProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -91,9 +102,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Datas\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="GhAutoUpdater.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

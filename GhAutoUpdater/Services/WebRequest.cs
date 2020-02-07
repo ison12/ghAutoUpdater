@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -16,12 +17,38 @@ namespace GhAutoUpdater.Services
         /// <summary>
         /// 
         /// </summary>
+        private string appName;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private string appVersion;
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public WebRequest()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="url"></param>
         /// <param name="parameters"></param>
         /// <param name="timeout"></param>
         /// <returns></returns>
         public string GetAsString(string url, Dictionary<string, object> parameters, TimeSpan? timeout = null)
         {
+            //自分自身のAssemblyを取得
+            System.Reflection.Assembly asm =
+                System.Reflection.Assembly.GetExecutingAssembly();
+            //バージョンの取得
+            System.Version ver = asm.GetName().Version;
+            this.appName = asm.GetName().Name;
+            this.appVersion = asm.GetName().Version.ToString();
+
+
             return GetAsStringAsync(url, parameters, timeout).Result;
         }
 
@@ -47,6 +74,7 @@ namespace GhAutoUpdater.Services
 
                 using (var client = new HttpClient())
                 {
+                    client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(appName, appVersion));
                     client.Timeout = timeout.Value;
 
                     Task<HttpResponseMessage> responseTask = client.GetAsync(urlWithParams, HttpCompletionOption.ResponseContentRead);

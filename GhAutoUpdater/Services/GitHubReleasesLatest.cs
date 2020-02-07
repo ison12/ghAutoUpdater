@@ -34,7 +34,11 @@ namespace GhAutoUpdater.Services
         public dynamic Fetch()
         {
             var webRequest = new WebRequest();
-            var responseContent = webRequest.GetAsString(appConfig.GithubApiRootUrl.TrimEnd('/') + '/' + appConfig.ReleasesLatestUri, new Dictionary<string, object>());
+            var responseContent = webRequest.GetAsString(
+                appConfig.GithubApiRootUrl.TrimEnd('/') + '/' +
+                appConfig.ReleasesLatestUri.Replace(":owner", appConfig.ReleasesLatestOwner)
+                                           .Replace(":repo", appConfig.ReleasesLatestRepo)
+                , new Dictionary<string, object>());
 
             var ret = JsonConvert.DeserializeObject<dynamic>(responseContent);
             return ret;
