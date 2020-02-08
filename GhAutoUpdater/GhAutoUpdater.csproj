@@ -25,12 +25,16 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>embedded</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -38,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,14 +69,17 @@
     <Compile Include="Forms\FProgress.Designer.cs">
       <DependentUpon>FProgress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logs\SimpleLogger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\AppDownloader.cs" />
     <Compile Include="Services\AppInstaller.cs" />
     <Compile Include="Services\AppVersionGetter.cs" />
     <Compile Include="Services\AppVersionChecker.cs" />
     <Compile Include="Services\GitHubReleasesLatest.cs" />
+    <Compile Include="Services\ProcessExecutor.cs" />
     <Compile Include="Services\WebRequest.cs" />
+    <Compile Include="Utils\AppDuplicateChecker.cs" />
+    <Compile Include="Utils\AppUtil.cs" />
     <Compile Include="Utils\FileUtil.cs" />
     <EmbeddedResource Include="Forms\FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
@@ -88,6 +96,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Install.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -102,7 +113,10 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="App.ico" />
+    <Content Include="Resources\App.ico" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="GhAutoUpdater.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

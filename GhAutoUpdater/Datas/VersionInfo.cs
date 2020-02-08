@@ -28,7 +28,7 @@ namespace GhAutoUpdater.Datas
         public VersionInfo(string versionStr)
         {
             this.versionStr = versionStr;
-            this.versionArray= this.ConvertVersionStrToIntArray(this.versionStr);
+            this.versionArray = this.ConvertVersionStrToIntArray(this.versionStr);
         }
 
         /// <summary>
@@ -87,49 +87,45 @@ namespace GhAutoUpdater.Datas
                 isNormal = false;
             }
 
-            for (int indexA = 0; indexA < infoA.Length; indexA++)
+            for (int i = 0; i < infoA.Length; i++)
             {
-                for (int indexB = 0; indexB < infoB.Length; indexB++)
+                if (int.TryParse(infoA[i], out int intA) &&
+                    int.TryParse(infoB[i], out int intB))
                 {
-                    if (int.TryParse(infoA[indexA], out int intA) &&
-                        int.TryParse(infoB[indexB], out int intB))
+                    // 数値変換可能な場合
+                    if (intA < intB)
                     {
-                        // 数値変換可能な場合
-                        if (intA < intB)
-                        {
-                            // a < b
-                            return isNormal ? -1 : 1;
-                        }
-                        else if (intA > intB)
-                        {
-                            // a > b
-                            return isNormal ? 1 : -1;
-                        }
-                        else
-                        {
-                            // a = b
-                        }
-
+                        // a < b
+                        return isNormal ? -1 : 1;
+                    }
+                    else if (intA > intB)
+                    {
+                        // a > b
+                        return isNormal ? 1 : -1;
                     }
                     else
                     {
-                        // 文字列の場合
-                        if (infoA[indexA].CompareTo(infoB[indexB]) < 0)
-                        {
-                            // a < b
-                            return isNormal ? -1 : 1;
-                        }
-                        else if (infoA[indexA].CompareTo(infoB[indexB]) > 0)
-                        {
-                            // a > b
-                            return isNormal ? 1 : -1;
-                        }
-                        else
-                        {
-                            // a = b
-                        }
+                        // a = b
                     }
 
+                }
+                else
+                {
+                    // 文字列の場合
+                    if (infoA[i].CompareTo(infoB[i]) < 0)
+                    {
+                        // a < b
+                        return isNormal ? -1 : 1;
+                    }
+                    else if (infoA[i].CompareTo(infoB[i]) > 0)
+                    {
+                        // a > b
+                        return isNormal ? 1 : -1;
+                    }
+                    else
+                    {
+                        // a = b
+                    }
                 }
             }
 
@@ -163,7 +159,8 @@ namespace GhAutoUpdater.Datas
                     if (string.IsNullOrWhiteSpace(item))
                     {
                         ret[i] = "0";
-                    } else
+                    }
+                    else
                     {
                         ret[i] = item;
                     }

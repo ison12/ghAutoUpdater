@@ -1,4 +1,5 @@
 ﻿using GhAutoUpdater.Forms;
+using GhAutoUpdater.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,28 @@ namespace GhAutoUpdater
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FMain());
+            using (var appDuplicateChecker = new AppDuplicateChecker("GhAutoUpdater-c6839605-a231-4230-9bc8-48204cb13698"))
+            {
+                if (!appDuplicateChecker.Check())
+                {
+                    // 二重起動しているため終了
+                    return;
+                }
+
+                try
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new FMain());
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                }
+            }
         }
     }
 }

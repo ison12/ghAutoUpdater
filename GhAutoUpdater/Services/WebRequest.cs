@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GhAutoUpdater.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,17 +11,22 @@ using System.Web;
 namespace GhAutoUpdater.Services
 {
     /// <summary>
-    /// 
+    /// ウェブリクエスト
     /// </summary>
-    public class WebRequest
+    public class WebRequest : IDisposable
     {
         /// <summary>
-        /// 
+        /// HttpClient
+        /// </summary>
+        private HttpClient httpClient;
+
+        /// <summary>
+        /// アプリケーション名
         /// </summary>
         private string appName;
 
         /// <summary>
-        /// 
+        /// アプリケーションバージョン
         /// </summary>
         private string appVersion;
 
@@ -29,39 +35,37 @@ namespace GhAutoUpdater.Services
         /// </summary>
         public WebRequest()
         {
+            this.appName = AppUtil.GetAppName();
+            this.appVersion = AppUtil.GetAppVersion();
+
+            this.httpClient = new HttpClient();
         }
 
         /// <summary>
-        /// 
+        /// 破棄処理
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="parameters"></param>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
-        public string GetAsString(string url, Dictionary<string, object> parameters, TimeSpan? timeout = null)
+        public void Dispose()
         {
-            //自分自身のAssemblyを取得
-            System.Reflection.Assembly asm =
-                System.Reflection.Assembly.GetExecutingAssembly();
-            //バージョンの取得
-            System.Version ver = asm.GetName().Version;
-            this.appName = asm.GetName().Name;
-            this.appVersion = asm.GetName().Version.ToString();
-
-
-            return GetAsStringAsync(url, parameters, timeout).Result;
+            if (httpClient != null)
+            {
+                httpClient.Dispose();
+            }
         }
 
         /// <summary>
-        /// 
+        /// GETメソッドでWebリクエストする。
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="parameters"></param>
-        /// <param name="timeout"></param>
+        /// <param name="url">URL</param>
+        /// <param name="parameters">パラメータ</param>
+        /// <param name="timeout">タイムアウト</param>
         /// <returns></returns>
-        public Task<string> GetAsStringAsync(string url, Dictionary<string, object> parameters, TimeSpan? timeout = null)
+        public Task<HttpResponseMessage> GetAsync(
+              string url
+            , Dictionary<string, object> parameters
+            , TimeSpan? timeout = null)
         {
-            var ret = Task.Run(() => {
+            var ret = Task.Run(() =>
+            {
 
                 if (timeout == null)
                 {
@@ -70,36 +74,28 @@ namespace GhAutoUpdater.Services
 
                 var content = string.Empty;
 
-                var urlWithParams = BuildGetUrl(url, parameters);
+                var urlWithParams = BuildUrl(url, parameters);
 
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(appName, appVersion));
-                    client.Timeout = timeout.Value;
+                Task<HttpResponseMessage> responseTask = null;
 
-                    Task<HttpResponseMessage> responseTask = client.GetAsync(urlWithParams, HttpCompletionOption.ResponseContentRead);
-                    var response = responseTask.Result; // 処理終了まで待機する
+                httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(appName, appVersion));
+                httpClient.Timeout = timeout.Value;
 
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        var contentTask = response.Content.ReadAsStringAsync();
-                        content = contentTask.Result; // 処理終了まで待機する
-                    }
-                }
+                responseTask = httpClient.GetAsync(urlWithParams, HttpCompletionOption.ResponseHeadersRead);
 
-                return content;
+                return responseTask;
             });
 
             return ret;
         }
 
         /// <summary>
-        /// 
+        /// URLを構築する。
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="parameters"></param>
+        /// <param name="url">URL</param>
+        /// <param name="parameters">パラメータ</param>
         /// <returns></returns>
-        private string BuildGetUrl(string url, Dictionary<string, object> parameters)
+        private string BuildUrl(string url, Dictionary<string, object> parameters)
         {
             var ret = new StringBuilder();
             ret.Append(url);

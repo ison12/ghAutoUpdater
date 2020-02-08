@@ -1,4 +1,5 @@
 ﻿using GhAutoUpdater.Utils;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -33,6 +34,16 @@ namespace GhAutoUpdater.Configs
         /// 
         /// </summary>
         public string ApplicationVersionFilePath { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string InstallScriptFilePath { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<string> InstallCheckProcesses { get; set; } = new List<string>();
 
         /// <summary>
         /// 
@@ -93,6 +104,10 @@ namespace GhAutoUpdater.Configs
                 ApplicationVersionFilePath = node.InnerText;
             }
             {
+                var node = rootNode.SelectSingleNode("installScriptFilePath") as XmlElement;
+                InstallScriptFilePath = node.InnerText;
+            }
+            {
                 var node = rootNode.SelectSingleNode("githubApiRootUrl") as XmlElement;
                 GithubApiRootUrl = node.InnerText;
             }
@@ -107,6 +122,14 @@ namespace GhAutoUpdater.Configs
             {
                 var node = rootNode.SelectSingleNode("releasesLatest/repo") as XmlElement;
                 ReleasesLatestRepo = node.InnerText;
+            }
+
+            {
+                InstallCheckProcesses.Clear();
+                foreach (XmlElement item in rootNode.SelectNodes("installCheckProcesses"))
+                {
+                    InstallCheckProcesses.Add(item.InnerText);
+                }
             }
         }
 

@@ -35,6 +35,47 @@ namespace GhAutoUpdater.Utils
         }
 
         /// <summary>
+        /// 一時ファイルを生成する。
+        /// </summary>
+        /// <param name="rootDirPath">ルートディレクトリパス</param>
+        /// <returns></returns>
+        public static string GetTempFilePath(string rootDirPath)
+        {
+            string tempFilePath = null;
+            while (
+                (File.Exists(
+                    tempFilePath = Path.Combine(rootDirPath, Path.GetRandomFileName())
+                 ))
+            )
+            {
+                // 一意なファイルができるまでループする
+            }
+
+            return tempFilePath;
+        }
+
+        /// <summary>
+        /// 一時ディレクトリを生成する。
+        /// </summary>
+        /// <param name="rootDirPath">ルートディレクトリパス</param>
+        /// <returns></returns>
+        public static string CreateTempDirectory(string rootDirPath)
+        {
+            string tempDirPath = null;
+            while (
+                (Directory.Exists(
+                    tempDirPath = Path.Combine(rootDirPath, Path.GetRandomFileName())
+                 ))
+            )
+            {
+                // 一意なファイルができるまでループする
+            }
+            Directory.CreateDirectory(tempDirPath);
+
+            return tempDirPath;
+        }
+
+        /// <summary>
         /// ファイルの内容を読み込む。
         /// </summary>
         /// <param name="filePath">ファイルパス</param>
