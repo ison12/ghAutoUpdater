@@ -30,7 +30,7 @@ namespace GitHubAutoUpdater.Services
         }
 
         /// <summary>
-        /// ローカルにインストール済みのアプリからバージョン情報を取得する。
+        /// ローカルマシンにインストール済みのアプリからバージョン情報を取得する。
         /// </summary>
         /// <returns>バージョン情報</returns>
         public VersionInfo GetFromLocalApp()

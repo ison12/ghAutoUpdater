@@ -7,7 +7,7 @@ namespace GitHubAutoUpdater.Utils
     /// <summary>
     /// プロセス実行。
     /// </summary>
-    public class ProcessExecutor
+    public static class ProcessExecuteUtil
     {
         /// <summary>
         /// 実行処理。

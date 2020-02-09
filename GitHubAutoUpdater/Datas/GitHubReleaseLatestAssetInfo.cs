@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace GitHubAutoUpdater.Datas
 {
     /// <summary>
-    /// GitHub最新のリリース情報（Assets）
+    /// GitHub 最新リリース情報（Assets）
     /// </summary>
     [DataContract]
     public class GitHubReleaseLatestAssetInfo

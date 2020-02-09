@@ -21,47 +21,47 @@ namespace GitHubAutoUpdater.Configs
         private string filePath;
 
         /// <summary>
-        /// 
+        /// アプリケーション名
         /// </summary>
         public string ApplicationName { get; set; }
 
         /// <summary>
-        /// 
+        /// アプリケーションファイルパス
         /// </summary>
         public string ApplicationFilePath { get; set; }
 
         /// <summary>
-        /// 
+        /// アプリケーションバージョンファイルパス
         /// </summary>
         public string ApplicationVersionFilePath { get; set; }
 
         /// <summary>
-        /// 
+        /// アップデートスクリプトファイルパス
         /// </summary>
         public string UpdateScriptFilePath { get; set; }
 
         /// <summary>
-        /// 
+        /// アップデートチェック時のプロセスリスト
         /// </summary>
         public List<string> UpdateCheckProcesses { get; set; } = new List<string>();
 
         /// <summary>
-        /// 
+        /// GitHub APIルートURL
         /// </summary>
         public string GithubApiRootUrl { get; set; }
 
         /// <summary>
-        /// 
+        /// GitHub API 最新リリース URL
         /// </summary>
         public string GitHubReleasesLatestUri { get; set; }
 
         /// <summary>
-        /// 
+        /// GitHub API 最新リリース 所有者
         /// </summary>
         public string GitHubReleasesLatestOwner { get; set; }
 
         /// <summary>
-        /// 
+        /// GitHub API 最新リリース リポジトリ
         /// </summary>
         public string GitHubReleasesLatestRepo { get; set; }
 

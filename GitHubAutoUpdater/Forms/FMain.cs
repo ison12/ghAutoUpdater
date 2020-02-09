@@ -45,14 +45,14 @@ namespace GitHubAutoUpdater.Forms
         private bool isUpdateCancel = false;
 
         /// <summary>
-        /// バージョンチェック成功有無
-        /// </summary>
-        private bool isVersionCheckSuccess = false;
-
-        /// <summary>
         /// アップデート成功有無
         /// </summary>
         private bool isUpdateSuccess = false;
+
+        /// <summary>
+        /// バージョンチェック成功有無
+        /// </summary>
+        private bool isVersionCheckSuccess = false;
 
         /// <summary>
         /// 最新リリース情報
@@ -71,6 +71,17 @@ namespace GitHubAutoUpdater.Forms
             appConfig.Read();
 
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// インスタンスが破棄された際の処理。
+        /// </summary>
+        public void Destroy()
+        {
+            if (logger != null)
+            {
+                logger.Close();
+            }
         }
 
         /// <summary>
@@ -95,31 +106,32 @@ namespace GitHubAutoUpdater.Forms
                 , OnCheckVersion // バージョンチェック処理は進行状況フォームの表示が確定してから実行する
                 );
 
+            if (isVersionCheckSuccess)
+            {
+                // バージョンチェック成功時
+            }
         }
 
         /// <summary>
-        /// 
+        /// フォームクローズ時の処理。
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void FMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (logger != null)
-            {
-                logger.Close();
-            }
+            Destroy();
         }
 
         /// <summary>
-        /// 
+        /// アップデートボタン押下時のイベントプロシージャ
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">発生元</param>
+        /// <param name="e">イベントオブジェクト</param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
 
             if (MessageBox.Show(this
-                , "最新のバージョンをアップデートしてもよろしいですか？"
+                , "最新バージョンにアップデートしてもよろしいですか？"
                 , "アップデート確認"
                 , MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
             {
@@ -177,10 +189,10 @@ namespace GitHubAutoUpdater.Forms
         }
 
         /// <summary>
-        /// 
+        /// 閉じるボタン押下時のイベントプロシージャ
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">発生元</param>
+        /// <param name="e">イベントオブジェクト</param>
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -190,7 +202,7 @@ namespace GitHubAutoUpdater.Forms
         /// 停止されているべきプロセスが存在するかをチェックする。
         /// </summary>
         /// <param name="launchingProcesses">起動中のプロセス</param>
-        /// <returns>true プロセスが存在しないのでOK、false プロセスが存在するのでNG</returns>     
+        /// <returns>true プロセスが存在しないのでOK、false プロセスが存在するのでNG</returns>
         private bool CheckProcessToBeStoppedWhenUpdate(out List<string> launchingProcesses)
         {
             var ret = true;
@@ -219,11 +231,15 @@ namespace GitHubAutoUpdater.Forms
 
             try
             {
-                // ローカルアプリのバージョン情報を取得
+                /*
+                 * ローカルアプリのバージョン情報を取得
+                 */
                 var appVersoinGetter = new AppVersionGetter(appConfig);
                 var appVersionLocal = appVersoinGetter.GetFromLocalApp();
 
-                // github上の最新リリース情報を取得
+                /*
+                 * github上の最新リリース情報を取得
+                 */
                 using (var gitHubReleasesLatest = new GitHubReleasesLatest(this.appConfig))
                 {
                     var releaseLatestResponse = await gitHubReleasesLatest.FetchReleaseLatestInfo(); // 非同期なので取得まで待機する
@@ -296,6 +312,9 @@ namespace GitHubAutoUpdater.Forms
             }
         }
 
+        /// <summary>
+        /// アップデート処理。
+        /// </summary>
         private async void OnUpdate()
         {
             isUpdateSuccess = false;
@@ -337,7 +356,7 @@ namespace GitHubAutoUpdater.Forms
                         var size = assetItem.Size;
                         var browserDownloadUrl = assetItem.BrowserDownloadUrl;
 
-                        progressForm.SetMessage(string.Format("{0} / {1} ... Download {2}", (assetsIndex + 1), releaseLatestInfo.Assets.Count, name));
+                        progressForm.SetMessage(string.Format("ダウンロード数：{0} / {1} ... {2}", (assetsIndex + 1), releaseLatestInfo.Assets.Count, name));
                         progressForm.ChangeBlocks(size);
 
                         HttpResponseMessage releaseLatestResponse = await gitHubReleasesLatest.DownloadReleaseLatestFile(browserDownloadUrl); // 非同期なので取得まで待機する
@@ -407,7 +426,7 @@ namespace GitHubAutoUpdater.Forms
                 {
                     if (Path.GetExtension(item) == ".zip")
                     {
-                        progressForm.SetMessage("ZIPファイル解凍中");
+                        progressForm.SetMessage(string.Format("ZIPファイル解凍中 ... {0}", Path.GetFileName(item)));
                         progressForm.ChangeMarquee();
 
                         ZipFile.ExtractToDirectory(item, Path.Combine(Path.GetDirectoryName(item), Path.GetFileNameWithoutExtension(item)));
@@ -426,7 +445,7 @@ namespace GitHubAutoUpdater.Forms
                 progressForm.SetMessage("セキュリティロックの解除中");
                 progressForm.ChangeMarquee();
 
-                var securityUnblockExitCode = ProcessExecutor.Execute(
+                var securityUnblockExitCode = ProcessExecuteUtil.Execute(
                       "powershell" // 実行ファイル
                     , string.Format("-Command \"Get-ChildItem '{0}\\*.*' -Recurse | Unblock-File\"", downloadDirPath.TrimEnd('\\')) // 実行ファイルの引数
                     , out string securityUnblockOutput // 標準出力
@@ -505,7 +524,7 @@ namespace GitHubAutoUpdater.Forms
                       , updateScriptArgs
                       ));
 
-                var updateScriptExitCode = ProcessExecutor.Execute(
+                var updateScriptExitCode = ProcessExecuteUtil.Execute(
                       updateScriptFilePath // 実行ファイル
                     , updateScriptArgs // 実行ファイルの引数
                     , out string updateScriptOutput // 標準出力

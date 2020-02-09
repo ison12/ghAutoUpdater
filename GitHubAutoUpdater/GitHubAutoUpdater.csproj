@@ -95,7 +95,7 @@
     <Compile Include="Services\AppVersionGetter.cs" />
     <Compile Include="Services\AppVersionChecker.cs" />
     <Compile Include="Services\GitHubReleasesLatest.cs" />
-    <Compile Include="Utils\ProcessExecutor.cs" />
+    <Compile Include="Utils\ProcessExecuteUtil.cs" />
     <Compile Include="Services\WebRequest.cs" />
     <Compile Include="Utils\AppDuplicateChecker.cs" />
     <Compile Include="Utils\AppUtil.cs" />

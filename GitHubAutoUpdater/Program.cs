@@ -24,11 +24,15 @@ namespace GitHubAutoUpdater
                     return;
                 }
 
+                FMain mainForm = null;
+
                 try
                 {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Run(new FMain());
+
+                    mainForm = new FMain();
+                    Application.Run(mainForm);
                 }
                 catch (Exception)
                 {
@@ -36,7 +40,14 @@ namespace GitHubAutoUpdater
                 }
                 finally
                 {
+                    // 正常終了または例外発生時に念のためフォームの破棄処理を実行する
+                    if (mainForm != null)
+                    {
+                        mainForm.Destroy();
+                    }
+
                 }
+
             }
         }
     }

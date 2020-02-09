@@ -70,15 +70,18 @@ namespace GitHubAutoUpdater.Forms
         }
 
         /// <summary>
-        /// 
+        /// フォームロード時のイベントプロシージャ
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">発生元</param>
+        /// <param name="e">イベントオブジェクト</param>
         private void FProgress_Load(object sender, EventArgs e)
         {
             onLoad();
         }
 
+        /// <summary>
+        /// プログレスバーのマーキー変更処理。
+        /// </summary>
         public void ChangeMarquee()
         {
             progressBar.Style = ProgressBarStyle.Marquee;
@@ -89,6 +92,10 @@ namespace GitHubAutoUpdater.Forms
             Application.DoEvents();
         }
 
+        /// <summary>
+        /// プログレスバーのブロック変更処理。
+        /// </summary>
+        /// <param name="size">サイズ</param>
         public void ChangeBlocks(int size)
         {
             progressBar.Style = ProgressBarStyle.Blocks;
@@ -99,18 +106,30 @@ namespace GitHubAutoUpdater.Forms
             Application.DoEvents();
         }
 
+        /// <summary>
+        /// 値の加算処理。
+        /// </summary>
+        /// <param name="incValue">加算値</param>
         public void IncValue(int incValue)
         {
             progressBar.Value += incValue;
             Application.DoEvents();
         }
 
+        /// <summary>
+        /// 値の設定処理。
+        /// </summary>
+        /// <param name="value">値</param>
         public void SetValue(int value)
         {
             progressBar.Value = value;
             Application.DoEvents();
         }
 
+        /// <summary>
+        /// メッセージの設定処理。
+        /// </summary>
+        /// <param name="message">メッセージ</param>
         public void SetMessage(string message)
         {
             this.lblMessage.Text = message;
