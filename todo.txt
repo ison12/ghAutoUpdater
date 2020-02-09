@@ -1,0 +1,28 @@
+・exe.configファイルを設定ファイルとして利用する
+https://dobon.net/vb/dotnet/programing/appconfigfile.html
+https://docs.microsoft.com/ja-jp/dotnet/api/system.configuration.appsettingssection?view=netframework-4.8
+・Gh→GitHubAutoUpdaterに名前を変更する
+・Install.batは、Clibodone側に必要なもの
+・pdbファイルは埋め込みにしたほうが良いかも（Release時）
+
+
+  <appSettings>
+    <add key="applicationName" value="CliboDone" />
+    <add key="applicationFilePath" value="CliboDone.exe" />
+    <add key="applicationVersionFilePath" value="CliboDone.version" />
+    <add key="installScriptFilePath" value="Install.bat" />
+    <add key="githubApiRootUrl" value="https://api.github.com" />
+    <add key="ClientSettingsProvider.ServiceUri" value="" />
+  </appSettings>
+  <system.web>
+    <membership defaultProvider="ClientAuthenticationMembershipProvider">
+      <providers>
+        <add name="ClientAuthenticationMembershipProvider" type="System.Web.ClientServices.Providers.ClientFormsAuthenticationMembershipProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" />
+      </providers>
+    </membership>
+    <roleManager defaultProvider="ClientRoleProvider" enabled="true">
+      <providers>
+        <add name="ClientRoleProvider" type="System.Web.ClientServices.Providers.ClientRoleProvider, System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" serviceUri="" cacheTimeout="86400" />
+      </providers>
+    </roleManager>
+  </system.web>
