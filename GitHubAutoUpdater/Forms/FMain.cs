@@ -285,14 +285,6 @@ namespace GitHubAutoUpdater.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this
-                    , "バージョンチェック中にエラーが発生しました。\n" +
-                      "ネットワーク通信に失敗したか、設定ファイルなどに不備があります。\n\n" +
-                      "詳細はログファイルを確認してください。\n" +
-                      "ファイルパス:" + logger.FilePath
-                    , "バージョンチェックエラー"
-                    , MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 if (ex is AggregateException)
                 {
                     foreach (var e in ((AggregateException)ex).InnerExceptions)
@@ -304,6 +296,14 @@ namespace GitHubAutoUpdater.Forms
                 {
                     logger.Error(ex, "Version check error");
                 }
+
+                MessageBox.Show(this
+                    , "バージョンチェック中にエラーが発生しました。\n" +
+                      "ネットワーク通信に失敗したか、設定ファイルなどに不備があります。\n\n" +
+                      "詳細はログファイルを確認してください。\n" +
+                      "ファイルパス:" + logger.FilePath
+                    , "バージョンチェックエラー"
+                    , MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -319,6 +319,7 @@ namespace GitHubAutoUpdater.Forms
         {
             isUpdateSuccess = false;
 
+            // 本アプリの実行ファイルのディレクトリパス
             var rootDirPath = FileUtil.GetExecuteDirPath();
 
             // 一時ディレクトリパスを生成
@@ -556,13 +557,6 @@ namespace GitHubAutoUpdater.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this
-                    , "アップデート中にエラーが発生しました。\n\n" +
-                      "詳細はログファイルを確認してください。\n" +
-                      "ファイルパス:" + logger.FilePath
-                    , "アップデートエラー"
-                    , MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 if (ex is AggregateException)
                 {
                     foreach (var e in ((AggregateException)ex).InnerExceptions)
@@ -574,6 +568,13 @@ namespace GitHubAutoUpdater.Forms
                 {
                     logger.Error(ex, "Update error");
                 }
+
+                MessageBox.Show(this
+                    , "アップデート中にエラーが発生しました。\n\n" +
+                      "詳細はログファイルを確認してください。\n" +
+                      "ファイルパス:" + logger.FilePath
+                    , "アップデートエラー"
+                    , MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

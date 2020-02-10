@@ -158,17 +158,17 @@ namespace GitHubAutoUpdater.Logs
             if (innerEx != null)
             {
                 exMessage = message + ex.Message +
-                            Environment.NewLine +
-                            ex.StackTrace +
-                            Environment.NewLine +
-                            "Cause Exception : " + innerEx.Message + Environment.NewLine +
-                            innerEx.StackTrace;
+                            (string.IsNullOrEmpty(ex.StackTrace) ? string.Empty :
+                                Environment.NewLine + ex.StackTrace) +
+                                Environment.NewLine + "Cause Exception : " + innerEx.Message +
+                            (string.IsNullOrEmpty(innerEx.StackTrace) ? string.Empty :
+                                Environment.NewLine + innerEx.StackTrace);
             }
             else
             {
                 exMessage = message + ex.Message +
-                            Environment.NewLine +
-                            ex.StackTrace;
+                            (string.IsNullOrEmpty(ex.StackTrace) ? string.Empty :
+                                Environment.NewLine + ex.StackTrace);
             }
 
             Write("ERROR", exMessage);
